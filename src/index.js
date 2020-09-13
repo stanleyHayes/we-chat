@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import {createMuiTheme, ThemeProvider} from "@material-ui/core";
 import {Provider} from "react-redux";
 import store from "./redux/store";
+import {BrowserRouter} from "react-router-dom";
 
 const theme = createMuiTheme({
     typography: {
@@ -14,14 +15,16 @@ const theme = createMuiTheme({
 });
 
 ReactDOM.render(
-  <React.StrictMode>
-      <ThemeProvider theme={theme}>
-          <Provider store={store}>
-              <App />
-          </Provider>
-      </ThemeProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <BrowserRouter>
+            <ThemeProvider theme={theme}>
+                <Provider store={store}>
+                    <App/>
+                </Provider>
+            </ThemeProvider>
+        </BrowserRouter>
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

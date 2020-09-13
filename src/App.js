@@ -1,17 +1,29 @@
-import React from 'react';
+import React, {createContext} from 'react';
 import './App.css';
-import {BrowserRouter, Switch, Route} from "react-router-dom";
+import {Switch, Route} from "react-router-dom";
 import IndexPage from "./pages/home/index-page";
 import SignUpPage from "./pages/authentication/sign-up-page";
 import SignInPage from "./pages/authentication/sign-in-page";
 import ForgotPasswordPage from "./pages/authentication/forgot-password-page";
 import ChangePasswordPage from "./pages/authentication/change-password-page";
 import ChatPage from "./pages/chat/chat-page";
+import io from "socket.io-client";
+import {SERVER_URL} from "./constants/constants";
 
-function App() {
+export const SocketContext = createContext();
+
+function App({token, currentUser, loading}) {
+
+    const socket = io(SERVER_URL, {
+        query: {
+            token,
+            currentUser
+        }
+    });
+
     return (
-        <BrowserRouter>
-            <Switch>
+        <Switch>
+            <SocketContext.Provider value={socket}>
                 <Route path="/" exact={true}>
                     <IndexPage/>
                 </Route>
@@ -30,9 +42,10 @@ function App() {
                 <Route path="/chat" exact={true}>
                     <ChatPage/>
                 </Route>
-            </Switch>
-        </BrowserRouter>
+            </SocketContext.Provider>
+        </Switch>
     );
 }
+
 
 export default App;

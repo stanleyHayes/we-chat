@@ -8,7 +8,9 @@ const ChatroomList = ({chats}) => {
             {chats.map((chat, index) => {
                 return (
                     <Grid item={true} xs={12} key={index}>
-                        <ChatroomListItem chat={chat}/>
+                        <ChatroomListItem
+                            chat={chat}
+                        />
                     </Grid>
                 )
             })}

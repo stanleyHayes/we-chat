@@ -1,12 +1,22 @@
 import React from "react";
-import {Container} from "@material-ui/core";
+import {Redirect} from "react-router-dom";
+import {connect} from "react-redux";
 
-const IndexPage = () => {
-    return (
-        <Container>
+const IndexPage = ({currentUser, loading}) => {
 
-        </Container>
-    )
+    if (!currentUser && !loading) {
+        return <Redirect to="/login" />
+    }else {
+        return <Redirect to='/chat' />
+    }
 }
 
-export default IndexPage;
+const mapStateToProps = state => {
+    return {
+        currentUser: state.auth.currentUser,
+        loading: state.auth.loading,
+        token: state.auth.token
+    }
+}
+
+export default connect(mapStateToProps)(IndexPage) ;

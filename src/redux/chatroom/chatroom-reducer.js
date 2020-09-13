@@ -1,4 +1,5 @@
 import {ROOMS} from "./chatroom-data";
+import {SET_ACTIVE_ROOM} from "./chatroom-action-types";
 
 const INITIAL_STATE = {
     rooms: ROOMS,
@@ -9,6 +10,11 @@ const INITIAL_STATE = {
 
 const chatroomReducer = (state = INITIAL_STATE, action) => {
     switch (action.type){
+        case SET_ACTIVE_ROOM:
+            return {
+                ...state,
+                activeRoom: action.payload.roomId
+            }
         default:
             return state;
     }
