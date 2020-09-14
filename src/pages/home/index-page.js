@@ -5,7 +5,7 @@ import {connect} from "react-redux";
 const IndexPage = ({currentUser, loading}) => {
 
     if (!currentUser && !loading) {
-        return <Redirect to="/login" />
+        return <Redirect to="/auth/login" />
     }else {
         return <Redirect to='/chat' />
     }

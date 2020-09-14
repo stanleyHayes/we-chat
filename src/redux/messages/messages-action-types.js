@@ -1,0 +1,2 @@
+export const SET_CHAT_MESSAGES = 'SET_CHAT_MESSAGES';
+export const ADD_MESSAGE = 'ADD_MESSAGE';

@@ -1,9 +1,12 @@
-import React from "react";
+import React, {useContext, useState} from "react";
 import {Card, CardContent, Grid, IconButton, TextField} from "@material-ui/core";
 import {makeStyles} from "@material-ui/styles";
 import {AttachFile, SendRounded} from "@material-ui/icons";
+import {SocketContext} from "../../App";
+import {connect} from "react-redux";
 
-const ChatDetailInput = () => {
+
+const ChatDetailInput = ({currentUser, room}) => {
 
     const useStyles = makeStyles(theme => {
         return {
@@ -15,6 +18,28 @@ const ChatDetailInput = () => {
 
     const classes = useStyles();
 
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+
+    const handleMessageChange = event => {
+        setMessage(event.target.value);
+    }
+
+    const socket = useContext(SocketContext);
+    const handleMessageSend = event => {
+        event.preventDefault();
+
+        if(!message){
+            setError("Message required");
+            return ;
+        }else {
+            setError("");
+        }
+        socket.emit('NEW_MESSAGE', {message, currentUser, room}, () => {
+            setMessage("")
+        });
+    }
+
     return (
         <Card variant="outlined" square={true}>
             <CardContent>
@@ -25,15 +50,23 @@ const ChatDetailInput = () => {
                         </IconButton>
                     </Grid>
                     <Grid item={true} className={classes.input}>
-                        <TextField
-                            variant="outlined"
-                            fullWidth={true}
-                            margin="dense"
-                            placeholder="Type a message"
-                        />
+                        <form onSubmit={handleMessageSend}>
+                            <TextField
+                                onChange={handleMessageChange}
+                                value={message}
+                                variant="outlined"
+                                fullWidth={true}
+                                margin="dense"
+                                placeholder="Type a message"
+                                required={true}
+                                name="message"
+                                error={Boolean(error)}
+                                helperText={error}
+                            />
+                        </form>
                     </Grid>
                     <Grid item={true}>
-                        <IconButton>
+                        <IconButton onClick={handleMessageSend}>
                             <SendRounded/>
                         </IconButton>
                     </Grid>
@@ -42,5 +75,11 @@ const ChatDetailInput = () => {
         </Card>
     )
 }
+const mapStateToProps = state => {
+    return {
+        currentUser: state.auth.currentUser
+    }
+}
 
-export default ChatDetailInput;
+
+export default connect(mapStateToProps) (ChatDetailInput);

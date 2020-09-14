@@ -8,8 +8,6 @@ import ScrollToBottom from "react-scroll-to-bottom";
 
 const ChatDetail = ({room, messages, loading}) => {
 
-    const {name} = room;
-
     const useStyles = makeStyles(theme => {
         return {
             root: {
@@ -56,7 +54,7 @@ const ChatDetail = ({room, messages, loading}) => {
                 </ScrollToBottom>
             </div>
             <div className={classes.input}>
-                <ChatDetailInput/>
+                <ChatDetailInput room={room}/>
             </div>
         </div>
     )
