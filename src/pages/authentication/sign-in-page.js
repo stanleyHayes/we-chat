@@ -180,7 +180,7 @@ const SignInPage = ({loading}) => {
 
 const mapStateToProps = state => {
     return {
-        currentUser: state.auth.loading
+        loading: state.auth.loading
     }
 }
 export default connect(mapStateToProps) (SignInPage);

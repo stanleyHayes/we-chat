@@ -38,8 +38,8 @@ export const signUp = (history, user) => {
             url: `${DEVELOPMENT_BASE_URL}/auth/register`,
             data: {...user}
         }).then(response => {
-            const {user, token} = response.data;
-            dispatch(signUpSuccess(user, token));
+            const {data, token} = response.data;
+            dispatch(signUpSuccess(data, token));
             localStorage.setItem(TOKEN_KEY, token);
             history.push('/')
         }).catch(error => {
@@ -76,8 +76,9 @@ export const signIn = (history, user) => {
             url: `${DEVELOPMENT_BASE_URL}/auth/login`,
             data: {...user}
         }).then(response => {
-            const {user, token} = response.data;
-            dispatch(signInSuccess(user, token));
+            const {data, token} = response.data;
+            console.log(user, token);
+            dispatch(signInSuccess(data, token));
             localStorage.setItem(TOKEN_KEY, token);
             history.push('/');
         }).catch(error => {
