@@ -1,6 +1,6 @@
-import React, {createContext} from 'react';
+import React, {createContext, useEffect} from 'react';
 import './App.css';
-import {Switch, Route} from "react-router-dom";
+import {Switch, Route, Redirect, useHistory} from "react-router-dom";
 import IndexPage from "./pages/home/index-page";
 import SignUpPage from "./pages/authentication/sign-up-page";
 import SignInPage from "./pages/authentication/sign-in-page";
@@ -8,18 +8,26 @@ import ForgotPasswordPage from "./pages/authentication/forgot-password-page";
 import ChangePasswordPage from "./pages/authentication/change-password-page";
 import ChatPage from "./pages/chat/chat-page";
 import io from "socket.io-client";
-import {SERVER_URL} from "./constants/constants";
+import {SERVER_URL, TOKEN_KEY} from "./constants/constants";
+import {useDispatch} from "react-redux";
+import {getLoggedInUser} from "./redux/auth/auth-action-creator";
 
 export const SocketContext = createContext();
 
-function App({token, currentUser, loading}) {
+function App() {
 
-    const socket = io(SERVER_URL, {
-        query: {
-            token,
-            currentUser
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    useEffect(() => {
+        let token = localStorage.getItem(TOKEN_KEY);
+        if(!token){
+            return <Redirect to="/auth/login"/>
         }
-    });
+        dispatch(getLoggedInUser(history, token));
+    }, [dispatch, history]);
+
+    const socket = io(SERVER_URL);
 
     return (
         <Switch>

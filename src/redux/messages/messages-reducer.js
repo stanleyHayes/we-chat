@@ -1,4 +1,3 @@
-import {MESSAGES} from "./messages-data";
 import {ADD_MESSAGE, SET_CHAT_MESSAGES} from "./messages-action-types";
 
 const INITIAL_STATE = {

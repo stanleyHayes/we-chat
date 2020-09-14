@@ -1,4 +1,6 @@
 import {
+    GET_LOGGED_IN_USER_FAILURE,
+    GET_LOGGED_IN_USER_REQUEST, GET_LOGGED_IN_USER_SUCCESS,
     SIGN_IN_FAILURE,
     SIGN_IN_REQUEST,
     SIGN_IN_SUCCESS,
@@ -56,6 +58,30 @@ const authReducer = (state = INITIAL_STATE, action) => {
             }
 
         case SIGN_IN_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                currentUser: null,
+                token: null,
+                error: action.payload.error
+            }
+
+        case GET_LOGGED_IN_USER_REQUEST:
+            return {
+                ...state,
+                loading: true
+            }
+
+        case GET_LOGGED_IN_USER_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                currentUser: action.payload.user,
+                token: action.payload.token,
+                error: null
+            }
+
+        case GET_LOGGED_IN_USER_FAILURE:
             return {
                 ...state,
                 loading: false,

@@ -1,8 +1,7 @@
-import {ROOMS} from "./chatroom-data";
 import {SET_ACTIVE_ROOM} from "./chatroom-action-types";
 
 const INITIAL_STATE = {
-    rooms: ROOMS,
+    rooms: [],
     loading: false,
     error: null,
     activeRoom: null

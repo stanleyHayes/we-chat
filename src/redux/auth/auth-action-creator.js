@@ -1,4 +1,6 @@
 import {
+    GET_LOGGED_IN_USER_FAILURE,
+    GET_LOGGED_IN_USER_REQUEST, GET_LOGGED_IN_USER_SUCCESS,
     SIGN_IN_FAILURE,
     SIGN_IN_REQUEST,
     SIGN_IN_SUCCESS,
@@ -83,6 +85,47 @@ export const signIn = (history, user) => {
             history.push('/');
         }).catch(error => {
             dispatch(signInError(error.response.data.error));
+        });
+    }
+}
+
+export const getLoggedInUserRequest = () => {
+    return {
+        type: GET_LOGGED_IN_USER_REQUEST
+    }
+}
+
+export const getLoggedInUserSuccess = (user, token) => {
+    return {
+        type: GET_LOGGED_IN_USER_SUCCESS,
+        payload: {user, token}
+    }
+}
+
+export const getLoggedInUserError = (error) => {
+    return {
+        type: GET_LOGGED_IN_USER_FAILURE,
+        payload: {error}
+    }
+}
+
+export const getLoggedInUser = (history, token) => {
+    return dispatch => {
+        dispatch(getLoggedInUserRequest());
+        axios({
+            method: 'get',
+            url: `${DEVELOPMENT_BASE_URL}/auth/me`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then(response => {
+            const {data, token} = response.data;
+            dispatch(getLoggedInUserSuccess(data, token));
+            localStorage.setItem(TOKEN_KEY, token);
+            history.push('/chat');
+        }).catch(error => {
+            dispatch(getLoggedInUserError(error.response.data.error));
+            history.push('/auth/login');
         });
     }
 }
