@@ -9,16 +9,16 @@ export const ROOMS = [
             status: 'DELIVERED'
         }
     },
-    // {
-    //     _id: "2",
-    //     name: "Hubert Agbenyegah",
-    //     avatar: "/images/message.svg",
-    //     lastMessage: {
-    //         text: "I thought you don't believe in our religion",
-    //         createdAt: Date.now(),
-    //         status: 'DELIVERED'
-    //     }
-    // },
+    {
+        _id: "2",
+        name: "Hubert Agbenyegah",
+        avatar: "/images/message.svg",
+        lastMessage: {
+            text: "I thought you don't believe in our religion",
+            createdAt: Date.now(),
+            status: 'DELIVERED'
+        }
+    },
     // {
     //     _id: "3",
     //     name: "Akosua Kyei-Baffour",

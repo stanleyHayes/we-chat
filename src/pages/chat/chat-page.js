@@ -13,6 +13,7 @@ import {makeStyles} from "@material-ui/styles";
 import {Redirect, useHistory} from "react-router-dom";
 import {TOKEN_KEY} from "../../constants/constants";
 import {getLoggedInUser} from "../../redux/auth/auth-action-creator";
+import {setRooms} from "../../redux/chatroom/chatroom-action-creators";
 
 const ChatPage = ({loading, rooms, activeRoom, currentUser}) => {
 
@@ -27,23 +28,16 @@ const ChatPage = ({loading, rooms, activeRoom, currentUser}) => {
         dispatch(getLoggedInUser(history, token));
     }, [dispatch, history]);
 
+
     const socket = useContext(SocketContext);
 
     useEffect(() => {
-        socket.on('ROOM_MESSAGES', (messages) => {
-            console.log(messages);
-            // dispatch(setChatMessages(messages));
-        });
 
         socket.on('USER_ROOMS', (rooms) => {
+            dispatch(setRooms(rooms));
             console.log(rooms);
         });
-
-        socket.on('NEW_MESSAGE_TO_CLIENT', (message) => {
-            // dispatch(addMessages(message));
-            console.log('called new message to client')
-            console.log('message', message);
-        });
+        
 
         return () => {
             socket.emit('LEAVE_ROOM', {currentUser}, () => {
@@ -52,6 +46,21 @@ const ChatPage = ({loading, rooms, activeRoom, currentUser}) => {
         }
     }, [currentUser, dispatch, socket]);
 
+    useEffect(() => {
+
+        socket.on('NEW_MESSAGE_TO_CLIENT', (message) => {
+            // dispatch(addMessages(message));
+            console.log('called new message to client')
+            console.log('message', message);
+        });
+
+        socket.on('ROOM_MESSAGES', (messages) => {
+            console.log(messages);
+            // dispatch(setChatMessages(messages));
+        });
+        
+    }, [socket]);
+    
     const useStyles = makeStyles(theme => {
         return {
             root: {
@@ -64,6 +73,10 @@ const ChatPage = ({loading, rooms, activeRoom, currentUser}) => {
     });
 
     const classes = useStyles();
+
+    if(!currentUser && !loading) {
+        return <Redirect to="/auth/login"/>
+    }
 
     return (
         <div className={classes.root}>

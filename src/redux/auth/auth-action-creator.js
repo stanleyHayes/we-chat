@@ -124,7 +124,8 @@ export const getLoggedInUser = (history, token) => {
             localStorage.setItem(TOKEN_KEY, token);
             history.push('/chat');
         }).catch(error => {
-            dispatch(getLoggedInUserError(error.response.data.error));
+            console.log(error.response)
+            // dispatch(getLoggedInUserError(error.response.data.error));
             history.push('/auth/login');
         });
     }
