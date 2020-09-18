@@ -1,12 +1,10 @@
-import React, {useContext, useEffect} from "react";
-import {Container, Divider, Grid, Typography} from "@material-ui/core";
+import React, {useContext, useEffect, useState} from "react";
+import {Divider, Grid} from "@material-ui/core";
 import ChatroomList from "../../components/shared/chatroom-list";
 import {connect, useDispatch} from "react-redux";
 import ChatDetail from "../../components/shared/chat-detail";
 import NoActiveRoom from "../../components/shared/no-active-room";
 import {SocketContext} from "../../App";
-import {TextField} from "@material-ui/core";
-import ScrollArea from "react-scrollbar";
 import {addMessages, setChatMessages} from "../../redux/messages/messages-action-creators";
 import SideNavbarHeader from "../../components/shared/side-navbar-header";
 import {makeStyles} from "@material-ui/styles";
@@ -14,22 +12,24 @@ import {Redirect, useHistory} from "react-router-dom";
 import {TOKEN_KEY} from "../../constants/constants";
 import {getLoggedInUser} from "../../redux/auth/auth-action-creator";
 import {setRooms} from "../../redux/chatroom/chatroom-action-creators";
+import GroupChatList from "../../components/shared/group-list";
+import ContactList from "../../components/shared/contact-list";
+import Profile from "../../components/shared/profile";
 
 const ChatPage = ({loading, rooms, activeRoom, currentUser}) => {
 
     const history = useHistory();
     const dispatch = useDispatch();
 
+    const socket = useContext(SocketContext);
+
     useEffect(() => {
         let token = localStorage.getItem(TOKEN_KEY);
-        if(!token){
+        if (!token) {
             return <Redirect to="/auth/login"/>
         }
         dispatch(getLoggedInUser(history, token));
     }, [dispatch, history]);
-
-
-    const socket = useContext(SocketContext);
 
     useEffect(() => {
 
@@ -37,7 +37,7 @@ const ChatPage = ({loading, rooms, activeRoom, currentUser}) => {
             dispatch(setRooms(rooms));
             console.log(rooms);
         });
-        
+
 
         return () => {
             socket.emit('LEAVE_ROOM', {currentUser}, () => {
@@ -58,14 +58,12 @@ const ChatPage = ({loading, rooms, activeRoom, currentUser}) => {
             console.log(messages);
             // dispatch(setChatMessages(messages));
         });
-        
+
     }, [socket]);
-    
+
     const useStyles = makeStyles(theme => {
         return {
-            root: {
-
-            },
+            root: {},
             users: {
                 backgroundColor: ""
             }
@@ -74,51 +72,55 @@ const ChatPage = ({loading, rooms, activeRoom, currentUser}) => {
 
     const classes = useStyles();
 
-    if(!currentUser && !loading) {
+    const [tabIndex, setSelectedTabIndex] = useState(0);
+
+    if (!currentUser && !loading) {
         return <Redirect to="/auth/login"/>
     }
 
+    const handleSelectedTab = index => {
+        setSelectedTabIndex(index);
+    }
+
+    const getTabDetail = index => {
+        switch (index) {
+            case 0:
+                return <ChatroomList chats={rooms}/>
+            case 1:
+                return <GroupChatList groups={[]}/>
+            case 2:
+                return <ContactList contacts={[]}/>
+            case 3:
+                return <Profile />
+            default:
+                return <ChatroomList chats={rooms}/>
+        }
+    }
     return (
         <div className={classes.root}>
             <Grid container={true}>
-                <Grid item={true} md={3} lg={4} className={classes.users}>
+                <Grid item={true} md={5} lg={5} className={classes.users}>
                     <Grid container={true} direction="column" justify="flex-start" spacing={2}>
                         <Grid item={true}>
-                            <SideNavbarHeader user={currentUser}/>
-                        </Grid>
-                        <Grid item={true}>
-                            <Divider variant="fullWidth"/>
-                        </Grid>
-                        <Grid item={true}>
-                            <Container>
-                                <TextField
-                                    variant="outlined"
-                                    fullWidth={true}
-                                    margin="dense"
-                                    placeholder="Search or start new chat"
-                                />
-                            </Container>
+                            <SideNavbarHeader
+                                index={tabIndex}
+                                handleSelectedTab={handleSelectedTab}
+                            />
                         </Grid>
                         <Grid item={true}>
                             <Divider variant="fullWidth"/>
                         </Grid>
                         <Grid item={true}>
                             {
-                                (!rooms.length) ? (
-                                    <Typography variant="h6" align="center">Start a conversation</Typography>
-                                ): (
-                                    <ScrollArea>
-                                        <ChatroomList
-                                            chats={rooms}
-                                        />
-                                    </ScrollArea>
-                                )
+                                <div>
+                                    {getTabDetail(tabIndex)}
+                                </div>
                             }
                         </Grid>
                     </Grid>
                 </Grid>
 
-                <Grid item={true} md={9} lg={8}>
+                <Grid item={true} md={7} lg={7}>
                     {
                         activeRoom ? (
                             <ChatDetail room={activeRoom}/>

@@ -1,8 +1,8 @@
 import React from "react";
 import {Container, Divider, Grid, TextField, Typography} from "@material-ui/core";
-import ChatroomListItem from "./chatroom-list-item";
+import ContactListItem from "./contact-list-item";
 
-const ChatroomList = ({chats}) => {
+const ContactList = ({contacts}) => {
     return (
         <Grid container={true} spacing={2}>
             <Grid item={true}  xs={12}>
@@ -11,7 +11,7 @@ const ChatroomList = ({chats}) => {
                         variant="outlined"
                         fullWidth={true}
                         margin="dense"
-                        placeholder="Search chat"
+                        placeholder="Search contact"
                     />
                 </Container>
             </Grid>
@@ -19,24 +19,22 @@ const ChatroomList = ({chats}) => {
                 <Divider variant="fullWidth" />
             </Grid>
             {
-                (!chats.length) ? (
-                    <Grid item={true} xs={12}>
-                        <Typography variant="h6" align="center">No Chats</Typography>
-                    </Grid>
-                ) : (
-                    chats.map((chat, index) => {
+                (contacts.length) ? (
+                    contacts.map((contact, index) => {
                         return (
-                            <Grid item={true} xs={12} key={index}>
-                                <ChatroomListItem
-                                    chat={chat}
-                                />
+                            <Grid key={index} item={true} xs={12}>
+                                <ContactListItem contact={contact}/>
                             </Grid>
                         )
                     })
+                ) : (
+                    <Grid item={true} xs={12}>
+                        <Typography variant="h6" align="center">No Contacts</Typography>
+                    </Grid>
                 )
             }
         </Grid>
     )
 }
 
-export default ChatroomList;
+export default ContactList;

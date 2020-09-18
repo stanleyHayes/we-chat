@@ -1,11 +1,9 @@
 import React from "react";
-import {CardContent, Card, Grid, Avatar, Typography, IconButton, Container} from "@material-ui/core";
-import {Chat, Person, PersonAdd} from "@material-ui/icons";
+import {Paper, Tabs, Tab} from "@material-ui/core";
+import {Chat, Contacts, Group, VerifiedUser} from "@material-ui/icons";
 import {makeStyles} from "@material-ui/styles";
 
-const SideNavbarHeader = ({user}) => {
-
-    const {avatar, name} = user;
+const SideNavbarHeader = ({handleSelectedTab, index}) => {
 
     const useStyles = makeStyles(theme => {
         return {
@@ -25,34 +23,37 @@ const SideNavbarHeader = ({user}) => {
     const classes = useStyles();
 
     return (
-        <Container className={classes.container}>
-            <Grid container={true} justify="space-between" alignItems="center">
-                <Grid item={true}>
-                    {
-                        (!avatar) ? (
-                            <Avatar className={classes.avatar}>
-                                <Typography variant="h6" align="center">{name[0][0]}</Typography>
-                            </Avatar>
-                        ) : (
-                            <Avatar className={classes.avatar} src={avatar}/>
-                        )
-                    }
-                </Grid>
-                <Grid item={true}>
-                    <IconButton>
-                        <Person className={classes.icon}/>
-                    </IconButton>
+        <Paper className={classes.container} variant="elevation" elevation={1}>
+            <Tabs value={index} onChange={(event, index) => handleSelectedTab(index)} variant="fullWidth">
+                <Tab
+                    value={0}
+                    selected={index === 0}
+                    icon={<Chat className={classes.icon}/>}
+                    label="Private"
+                />
 
-                    <IconButton>
-                        <PersonAdd className={classes.icon}/>
-                    </IconButton>
+                <Tab
+                    value={1}
+                    selected={index === 1}
+                    icon={<Group className={classes.icon}/>}
+                    label="Group"
+                />
 
-                    <IconButton>
-                        <Chat className={classes.icon}/>
-                    </IconButton>
-                </Grid>
-            </Grid>
-        </Container>
+                <Tab
+                    value={2}
+                    selected={index === 2}
+                    icon={<Contacts className={classes.icon}/>}
+                    label="Contacts"
+                />
+
+                <Tab
+                    value={3}
+                    selected={index === 3}
+                    icon={<VerifiedUser className={classes.icon}/>}
+                    label="Profile"
+                />
+            </Tabs>
+        </Paper>
     )
 }
 

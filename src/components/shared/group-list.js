@@ -1,8 +1,8 @@
 import React from "react";
 import {Container, Divider, Grid, TextField, Typography} from "@material-ui/core";
-import ChatroomListItem from "./chatroom-list-item";
+import GroupListItem from "./group-list-item";
 
-const ChatroomList = ({chats}) => {
+const GroupChatList = ({groups}) => {
     return (
         <Grid container={true} spacing={2}>
             <Grid item={true}  xs={12}>
@@ -11,7 +11,7 @@ const ChatroomList = ({chats}) => {
                         variant="outlined"
                         fullWidth={true}
                         margin="dense"
-                        placeholder="Search chat"
+                        placeholder="Search group"
                     />
                 </Container>
             </Grid>
@@ -19,15 +19,15 @@ const ChatroomList = ({chats}) => {
                 <Divider variant="fullWidth" />
             </Grid>
             {
-                (!chats.length) ? (
+                (!groups.length) ? (
                     <Grid item={true} xs={12}>
-                        <Typography variant="h6" align="center">No Chats</Typography>
+                        <Typography variant="h6" align="center">No Group Chats</Typography>
                     </Grid>
                 ) : (
-                    chats.map((chat, index) => {
+                    groups.map((chat, index) => {
                         return (
                             <Grid item={true} xs={12} key={index}>
-                                <ChatroomListItem
+                                <GroupListItem
                                     chat={chat}
                                 />
                             </Grid>
@@ -39,4 +39,4 @@ const ChatroomList = ({chats}) => {
     )
 }
 
-export default ChatroomList;
+export default GroupChatList;
